@@ -1,0 +1,98 @@
+---
+title: "Hw1"
+output: html_document
+---
+```{r, echo = F}
+data1 = read.csv('GSK.csv')
+library(ggplot2)
+```
+
+the code chunk below will generate the average blood pressure by stress level
+```{r,echo = F}
+aggregate(sbp ~ stress, data = data1, mean)
+```
+The systolic blood pressures by stress level appear similar by standard deviation.
+```{r, echo = F}
+aggregate(sbp ~ stress, data = data1, sd)
+
+```
+The medium exercise level has the lowest age.
+```{r, echo = F}
+aggregate(age ~ exercise, data = data1, mean)
+```
+The Low exercise group differs the most with its mean.
+```{r, echo = F}
+aggregate(age ~ exercise, data = data1, sd)
+
+```
+As the level of education increases, average age tends to decrease, also the variance of the age tends to increase as the level of education increases.
+```{r, echo = F}
+boxplot(age ~ educatn, data = data1, horizontal = TRUE)
+```
+
+People who are married tend to have a higher variance in blood pressure than those who are not married.
+```{r, echo = F}
+ggplot(data1, aes(x=sbp, fill=married)) + geom_histogram(binwidth=2, alpha=.5, position="identity")
+```
+The medium exercise group tends to have the highest stress level.
+```{r, echo = F}
+two.way = table(data1$exercise,data1$stress)
+mosaicplot(two.way, main = "Stress vs Exercise")
+```
+
+People who are married tend to have a higher proportion of lower stress levels
+```{r, echo = F}
+two.way = table(data1$married,data1$stress)
+mosaicplot(two.way, main = "single or na")
+```
+
+The lowest exercise group has the highest number of people.
+
+```{r, echo = F}
+table(data1$exercise)
+```
+The medium stress group has the most amount of high education subjects
+```{r, echo = F}
+two.way = table(data1$stress,data1$educatn)
+two.way
+```
+
+The medium stress group has the highest average age.
+```{r, echo = F}
+aggregate(age ~ stress, data = data1, mean)
+```
+
+Females tend to have a lower average systolic blood pressure.
+```{r, echo = F}
+aggregate(sbp ~ gender, data = data1, mean)
+
+```
+
+```{r, echo = F}
+the.results = t.test(sbp ~ married, data = data1, var.equal = TRUE, level = 1-0.05)
+pval = the.results$p.value
+ts = round(the.results$statistic,4)
+CI = round(the.results$conf.int,4)
+```
+
+
+
+
+```{r, echo = F}
+pval
+```
+The test-statistic is:
+```{r, echo = F}
+ts
+```
+And the confidence interval is: 
+```{r, echo = F}
+CI
+```
+The difference of the average systolic blood pressure between married and non-married individuals is between -8.31 to 1.53.
+
+We can reject the claim that married and non-married individuals tend to have differing systolic blood pressures, as their means tend to be similar to one another. Since the Pval is 17.59%, we can reject the alternative (that they are different) since there is not correlation between married and non-married with blood pressure.
+
+```{r ref.label=knitr::all_labels(), echo = T, eval = F}
+```
+
